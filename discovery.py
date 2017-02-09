@@ -28,17 +28,26 @@ class discovery():
 # show null bar
 	def getNullBar(self):
 		nullData=self.labelInfo[['label','null']].sort_values(by='null')
-		textLocation=nullData['null'].max()
+		self.drawBar(nullData,'null','label','label',nullData['null'].max(),'Null Rate','nullRateAll.png')
+		return nullData		
+
+# data:pd.dataFrame
+# x:x axis label
+# y:y axis label
+# label:label axis label
+# textLocation:distance from text to bar
+# title:title of picture
+# file:file name of picture
+	def drawBar(self,data,x,y,label,textLocation,title,file):
 		f,ax=plt.subplots()
-		sns.barplot(x='null',y='label',data=nullData,label='label')
-		ax.set_title('Null Rate')
+		sns.barplot(x=x,y=y,data=data,label=y)
+		ax.set_title(title)
 		ax.set_xlabel('')
 		pictureLength=ax.get_xbound()[1]
 		for p in ax.patches:
 		    width=p.get_width()
 		    ax.text(width+(pictureLength-textLocation)/2,p.get_y()+p.get_height()/2,str(round(width,2)),ha="center")
-		plt.savefig('nullRateAll.png')
-		plt.close()
-		return nullData			
+		plt.savefig(file)
+		plt.close()		
 
 	
