@@ -91,6 +91,7 @@ class discovery():
 
     def drawHist(self, data, file):
         label = data.name
+        data = data.dropna()
         sns.distplot(data)
         plt.title(r'{}: $\mu={}$, $\sigma={}$'.format(label, round(data.mean(), 2), round(data.std(), 2)))
         plt.xlabel(r'Number of {}'.format(label))
