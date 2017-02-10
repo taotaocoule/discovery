@@ -1,4 +1,5 @@
 import numpy as np
+import scipy
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
@@ -24,7 +25,7 @@ class discovery():
         labelInfo['count'] = data.shape[0]
         labelInfo['unique'] = labelInfo.apply(lambda x: len(data[x['label']].unique()), axis=1)
         labelInfo['null'] = labelInfo.apply(lambda x: np.sum(data[x['label']].isnull()) / x['count'], axis=1)
-        labelInfo['isCategory'] = labelInfo['unique'] < (labelInfo['count'] / 2)
+        labelInfo['isCategory'] = (labelInfo['unique'] < (labelInfo['count'] / 2)) | (labelInfo['type'] is np.string_)
         return labelInfo
 
     # show null bar
@@ -64,6 +65,16 @@ class discovery():
             tmp = tmp[(np.fabs(tmp) < 1) & (np.fabs(tmp) > .5)]
             correlation[i] = tmp.index.values
         return correlation
+
+    def calculateLabelCorrelation(self, correlation):
+        data = self.data
+        corrDict = {}
+        for key in correlation:
+            corrDict[key] = []
+            for corKey in correlation[key]:
+                perason = scipy.stats.pearsonr(data[key], data[corKey])
+                corrDict[key].append(perason)
+        return corrDict
 
     # data:pd.dataFrame
     # x:x axis label
