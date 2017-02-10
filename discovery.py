@@ -34,15 +34,16 @@ class discovery():
             nullData = None
         else:
             nullData = nullData[nullData.null > 0]
-            self.drawBar(nullData, 'null', 'label', 'label', nullData['null'].max(), 'Null Rate', 'nullRateAll.png')
+            # self.drawBar(nullData, 'null', 'label', 'label', nullData['null'].max(), 'Null Rate', 'nullRateAll')
         return nullData
 
+    # the top pie of all,show number of labels and their types
     def getOverviewPie(self):
         categoryData = self.labelInfo[['label', 'isCategory']]
         categoryCount = categoryData.isCategory.sum()
         x = [categoryCount, self.labelCount - categoryCount]
         label = ['Category', 'Number']
-        self.drawPie(x, label, 'Overview', 'overview.png', '%1.0f')
+        # self.drawPie(x, label, 'Overview', 'overview', '%1.0f')
         return x, label
 
     def getOverviewNumber(self):
@@ -70,12 +71,12 @@ class discovery():
             width = p.get_width()
             ax.text(width + (pictureLength - textLocation) / 2, p.get_y() + p.get_height() / 2, str(round(width, 2)),
                     ha="center")
-        plt.savefig(file)
+        plt.savefig(r'work/picture/' + file + '.png')
         plt.close()
 
     def drawPie(self, x, label, title, file, autopct):
         plt.pie(x, labels=label, autopct=autopct)
-        plt.savefig(file)
+        plt.savefig(r'work/picture/' + file + '.png')
         plt.close()
 
     def drawOverviewNumber(self, data, title, file):
@@ -86,7 +87,7 @@ class discovery():
             plt.subplot(row, 3, i + 1)
             sns.distplot(data[columns[i]])
         plt.suptitle(title)
-        plt.savefig(file)
+        plt.savefig(r'work/picture/' + file + '.png')
         plt.close()
 
     def drawHist(self, data, file):
@@ -96,7 +97,7 @@ class discovery():
         plt.title(r'{}: $\mu={}$, $\sigma={}$'.format(label, round(data.mean(), 2), round(data.std(), 2)))
         plt.xlabel(r'Number of {}'.format(label))
         plt.ylabel(r'Probability density')
-        plt.savefig(file)
+        plt.savefig(r'work/picture/' + file + '.png')
         plt.close()
 
     def drawLine(self, data, file):
