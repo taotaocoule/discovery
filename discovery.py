@@ -88,3 +88,12 @@ class discovery():
         plt.suptitle(title)
         plt.savefig(file)
         plt.close()
+
+    def drawHist(self, data, file):
+        label = data.name
+        sns.distplot(data)
+        plt.title(r'{}: $\mu={}$, $\sigma={}$'.format(label, round(data.mean(), 2), round(data.std(), 2)))
+        plt.xlabel(r'Number of {}'.format(label))
+        plt.ylabel('Probability density')
+        plt.savefig(file)
+        plt.close()
