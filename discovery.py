@@ -54,6 +54,17 @@ class discovery():
         data = self.data[self.labelInfo[self.labelInfo['isCategory']]['label'].values]
         return data
 
+    def getLabelCorr(self):
+        correlation = {}
+        data = self.getOverviewNumber()
+        corr = data.corr()
+        labels = data.columns
+        for i in labels:
+            tmp = corr[i].sort_values()
+            tmp = tmp[(np.fabs(tmp) < 1) & (np.fabs(tmp) > .5)]
+            correlation[i] = tmp.index.values
+        return correlation
+
     # data:pd.dataFrame
     # x:x axis label
     # y:y axis label
