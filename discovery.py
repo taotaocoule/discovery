@@ -29,7 +29,11 @@ class discovery():
     # show null bar
     def getNullBar(self):
         nullData = self.labelInfo[['label', 'null']].sort_values(by='null')
-        self.drawBar(nullData, 'null', 'label', 'label', nullData['null'].max(), 'Null Rate', 'nullRateAll.png')
+        if np.sum(nullData.null) == 0:
+            nullData=None
+        else:
+            nullData=nullData[nullData.null > 0]
+            self.drawBar(nullData, 'null', 'label', 'label', nullData['null'].max(), 'Null Rate', 'nullRateAll.png')
         return nullData
 
     # data:pd.dataFrame
