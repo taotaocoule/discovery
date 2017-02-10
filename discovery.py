@@ -95,6 +95,16 @@ class discovery():
         sns.distplot(data)
         plt.title(r'{}: $\mu={}$, $\sigma={}$'.format(label, round(data.mean(), 2), round(data.std(), 2)))
         plt.xlabel(r'Number of {}'.format(label))
-        plt.ylabel('Probability density')
+        plt.ylabel(r'Probability density')
+        plt.savefig(file)
+        plt.close()
+
+    def drawLine(self, data, file):
+        label = data.name
+        data = data.dropna()
+        plt.plot(data)
+        plt.title(r'{}: $\mu={}$'.format(label, round(data.mean(), 2)))
+        plt.xlabel(r'Timeline of {}'.format(label))
+        plt.ylabel(r'Number of {}'.format(label))
         plt.savefig(file)
         plt.close()
