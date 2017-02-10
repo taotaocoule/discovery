@@ -45,6 +45,14 @@ class discovery():
         self.drawPie(x, label, 'Overview', 'overview.png', '%1.0f')
         return x, label
 
+    def getOverviewNumber(self):
+        data = self.data[self.labelInfo[~self.labelInfo['isCategory']]['label'].values]
+        return data
+
+    def getOverviewCategory(self):
+        data = self.data[self.labelInfo[self.labelInfo['isCategory']]['label'].values]
+        return data
+
     # data:pd.dataFrame
     # x:x axis label
     # y:y axis label
@@ -67,5 +75,16 @@ class discovery():
 
     def drawPie(self, x, label, title, file, autopct):
         plt.pie(x, labels=label, autopct=autopct)
+        plt.savefig(file)
+        plt.close()
+
+    def drawOverviewNumber(self, data, title, file):
+        columns = data.columns
+        dataCount = len(columns)
+        row = np.ceil(dataCount / 3.)
+        for i in range(dataCount):
+            plt.subplot(row, 3, i + 1)
+            sns.distplot(data[columns[i]])
+        plt.suptitle(title)
         plt.savefig(file)
         plt.close()
