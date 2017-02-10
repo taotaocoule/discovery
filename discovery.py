@@ -107,5 +107,5 @@ class discovery():
         plt.title(r'{}: $\mu={}$'.format(label, round(data.mean(), 2)))
         plt.xlabel(r'Timeline of {}'.format(label))
         plt.ylabel(r'Number of {}'.format(label))
-        plt.savefig(file)
+        plt.savefig(r'work/picture/' + file + '.png')
         plt.close()
