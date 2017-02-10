@@ -13,7 +13,7 @@ class discovery():
         self.data = data
         self.columns = data.columns
         self.labelInfo = self.getLabelInfo()
-        self.labelCount=len(self.labelInfo)
+        self.labelCount = len(self.labelInfo)
 
     # label is category or number
     def getLabelInfo(self):
@@ -31,18 +31,19 @@ class discovery():
     def getNullBar(self):
         nullData = self.labelInfo[['label', 'null']].sort_values(by='null')
         if np.sum(nullData.null) == 0:
-            nullData=None
+            nullData = None
         else:
-            nullData=nullData[nullData.null > 0]
+            nullData = nullData[nullData.null > 0]
             self.drawBar(nullData, 'null', 'label', 'label', nullData['null'].max(), 'Null Rate', 'nullRateAll.png')
         return nullData
 
     def getOverviewPie(self):
-        categoryData=self.labelInfo[['label', 'isCategory']]
-        categoryCount=categoryData.isCategory.sum()
-        x=[categoryCount, self.labelCount-categoryCount]
-        label=['Category', 'Number']
-        return x,label
+        categoryData = self.labelInfo[['label', 'isCategory']]
+        categoryCount = categoryData.isCategory.sum()
+        x = [categoryCount, self.labelCount - categoryCount]
+        label = ['Category', 'Number']
+        self.drawPie(x, label, 'Overview', 'overview.png', '%1.0f')
+        return x, label
 
     # data:pd.dataFrame
     # x:x axis label
@@ -64,6 +65,7 @@ class discovery():
         plt.savefig(file)
         plt.close()
 
-    def drawPie(self,data,x,label,title,file):
-        plt.pie(x, labels=label, autopct='%1.1f%%')
-        return data
+    def drawPie(self, x, label, title, file, autopct):
+        plt.pie(x, labels=label, autopct=autopct)
+        plt.savefig(file)
+        plt.close()
