@@ -13,6 +13,7 @@ class discovery():
         self.data = data
         self.columns = data.columns
         self.labelInfo = self.getLabelInfo()
+        self.labelCount=len(self.labelInfo)
 
     # label is category or number
     def getLabelInfo(self):
@@ -36,6 +37,13 @@ class discovery():
             self.drawBar(nullData, 'null', 'label', 'label', nullData['null'].max(), 'Null Rate', 'nullRateAll.png')
         return nullData
 
+    def getOverviewPie(self):
+        categoryData=self.labelInfo[['label', 'isCategory']]
+        categoryCount=categoryData.isCategory.sum()
+        x=[categoryCount, self.labelCount-categoryCount]
+        label=['Category', 'Number']
+        return x,label
+
     # data:pd.dataFrame
     # x:x axis label
     # y:y axis label
@@ -55,3 +63,7 @@ class discovery():
                     ha="center")
         plt.savefig(file)
         plt.close()
+
+    def drawPie(self,data,x,label,title,file):
+        plt.pie(x, labels=label, autopct='%1.1f%%')
+        return data
