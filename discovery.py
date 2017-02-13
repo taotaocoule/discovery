@@ -30,7 +30,7 @@ class discovery():
         return labelInfo
 
     # show null bar
-    def getNullBar(self):
+    def getNullData(self):
         nullData = self.labelInfo[['label', 'null']].sort_values(by='null')
         if np.sum(nullData.null) == 0:
             nullData = None
@@ -62,10 +62,18 @@ class discovery():
         corr = data.corr()
         labels = data.columns
         for i in labels:
-            tmp = corr[i].sort_values()
+            tmp = corr[i]
             tmp = tmp[(np.fabs(tmp) < 1) & (np.fabs(tmp) > .5)]
             correlation[i] = tmp.index.values
-        return correlation
+        usefulCorrKey = [{key: correlation[key]} for key in correlation if len(correlation[key]) > 0]
+        dataAppend = []
+        for i in usefulCorrKey:
+            thisKey = list(i.keys())[0]
+            for corlabel in i[thisKey]:
+                newData = [thisKey, corlabel, corr.loc[thisKey, corlabel]]
+                dataAppend.append(newData)
+        labelCorr = pd.DataFrame(dataAppend, columns=['label', 'corLabel', 'correlation'])
+        return labelCorr
 
     def calculateLabelCorrelation(self, correlation):
         data = self.data
@@ -132,3 +140,18 @@ class discovery():
         plt.ylabel(r'Number of {}'.format(label))
         plt.savefig(r'work/picture/' + file + '.png')
         plt.close()
+
+    def report(self):
+        data = self.data
+        # show overview info
+        overview_label = self.labelInfo
+        # draw all types pie
+        x, y = self.getOverviewPie()
+        self.drawPie(x, y, 'Overview', 'overview', '%1.0f')
+        overview_null = self.getNullData()
+        if len(overview_null) > 0:
+            # draw null bar
+            self.drawBar(overview_null, 'null', 'label', 'label', overview_null['null'].max(), 'Null Rate',
+                         'nullRateAll')
+        overview_corr = self.getLabelCorr()
+        usefulCorrKey = [key for key in overview_corr if len(overview_corr[key]) > 0]
