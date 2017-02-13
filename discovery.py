@@ -25,7 +25,8 @@ class discovery():
         labelInfo['count'] = data.shape[0]
         labelInfo['unique'] = labelInfo.apply(lambda x: len(data[x['label']].unique()), axis=1)
         labelInfo['null'] = labelInfo.apply(lambda x: np.sum(data[x['label']].isnull()) / x['count'], axis=1)
-        labelInfo['isCategory'] = (labelInfo['unique'] < (labelInfo['count'] / 2)) | (labelInfo['type'] is np.string_)
+        labelInfo['isNumber'] = labelInfo.apply(lambda x: np.issubdtype(data[x['label']], np.number), axis=1)
+        labelInfo['isCategory'] = (labelInfo['unique'] < (labelInfo['count'] / 2)) | ~(labelInfo['isNumber'])
         return labelInfo
 
     # show null bar
@@ -47,17 +48,17 @@ class discovery():
         # self.drawPie(x, label, 'Overview', 'overview', '%1.0f')
         return x, label
 
-    def getOverviewNumber(self):
+    def getAllNumber(self):
         data = self.data[self.labelInfo[~self.labelInfo['isCategory']]['label'].values]
         return data
 
-    def getOverviewCategory(self):
+    def getAllCategory(self):
         data = self.data[self.labelInfo[self.labelInfo['isCategory']]['label'].values]
         return data
 
     def getLabelCorr(self):
         correlation = {}
-        data = self.getOverviewNumber()
+        data = self.getAllNumber()
         corr = data.corr()
         labels = data.columns
         for i in labels:
