@@ -73,7 +73,7 @@ class discovery():
                 newData = [thisKey, corlabel, corr.loc[thisKey, corlabel]]
                 dataAppend.append(newData)
         labelCorr = pd.DataFrame(dataAppend, columns=['label', 'corLabel', 'correlation'])
-        return labelCorr
+        return labelCorr.drop_duplicates('correlation')
 
     def calculateLabelCorrelation(self, correlation):
         data = self.data
@@ -143,15 +143,18 @@ class discovery():
 
     def report(self):
         data = self.data
+        numbericData = self.getAllNumber()
+        categoricData = self.getAllCategory()
         # show overview info
         overview_label = self.labelInfo
         # draw all types pie
         x, y = self.getOverviewPie()
-        self.drawPie(x, y, 'Overview', 'overview', '%1.0f')
+        self.drawPie(x, y, 'Overview', 'overview', '%3.1f%%')
+        # draw all numberic label hist
+        self.drawOverviewNumber(numbericData, 'All numberic Labels', 'overview_numberic')
         overview_null = self.getNullData()
-        if len(overview_null) > 0:
+        if overview_null is not None and len(overview_null) > 0:
             # draw null bar
             self.drawBar(overview_null, 'null', 'label', 'label', overview_null['null'].max(), 'Null Rate',
                          'nullRateAll')
         overview_corr = self.getLabelCorr()
-        usefulCorrKey = [key for key in overview_corr if len(overview_corr[key]) > 0]
